@@ -1,72 +1,12 @@
 ---
-title: "Homework 1"
+title: "Homework 2"
 author: Vera Xu
 output: github_document
 ---
 
-This is my solution to HW1.
+This is my solution to HW2.
 
 ```{r}
 library(tidyverse)
-library(palmerpenguins)
-```
-
-## Problem 1
-
-Create a data frame with the specified elements. 
-
-```{r create_df}
-prob1_df = 
-  tibble(
-    samp = rnorm(10),
-    samp_gt_0 = samp > 0,
-    char_vec = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
-    factor_vec = factor(c("low", "low", "low", "mod", "mod", "mod", "mod", "high", "high", "high"))
-  )
-```
-
-Take the mean of each variable in my data frame.
-
-```{r mean_pull_var}
-mean(pull(prob1_df, samp))
-mean(pull(prob1_df, samp_gt_0))
-mean(pull(prob1_df, char_vec))
-mean(pull(prob1_df, factor_vec))
-```
-
-I can take the mean of numbers and logical but not character or factor. 
-
-```{r try_numeric}
-as.numeric(pull(prob1_df, samp))
-as.numeric(pull(prob1_df, samp_gt_0))
-as.numeric(pull(prob1_df, char_vec))
-as.numeric(pull(prob1_df, factor_vec))
-```
-
-```{r}
-as.numeric(pull(prob1_df, samp_gt_0)) * pull(prob1_df, samp)
-```
-
-
-## Problem 2
-
-```{r}
-data("penguins", package = "palmerpenguins")
-```
-
-#### Description of the penguins dataset
-* The penguins dataset contains the following variables: `r ls(penguins)`.
-  * The species variable contains `r unique(pull(penguins, species))`
-  * The island variable contains `r unique(pull(penguins, island))`
-* The penguins dataset has `r nrow(penguins)` rows and `r ncol(penguins)` columns.
-* The mean flipper length is `r mean(pull(penguins, flipper_length_mm), na.rm = TRUE)` mm.
-
-#### Scatterplot showing the distribution of bill length and flipper length by species
-```{r}
-ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species))+ geom_point()
-```
-
-```{r}
-ggsave("p8105_hw1_q2.png")
 ```
 
