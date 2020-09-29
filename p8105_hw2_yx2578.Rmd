@@ -99,11 +99,13 @@ p2_df =
     route8 = as.character(route8),
     route9 = as.character(route9),
     route10 = as.character(route10),
-    route11 = as.character(route11)) %>%
+    route11 = as.character(route11)
+    ) %>%
   distinct() %>%
   pivot_longer(
     route1:route11,
-    values_to = "route_name") %>%
+    values_to = "route_name"
+    ) %>%
   drop_na(route_name) %>%
   select(-name)
 ```
@@ -125,7 +127,7 @@ The raw dataset is not tidy as there are repeated information, and varialbles us
 
 * There are `r distinct(p2_df, station_name, line) %>% nrow()` distinct stations in this dataset.
 * There are `r filter(p2_df, ada == 'TRUE') %>% distinct(station_name, line) %>% nrow()` ADA compliant stations.
-* There are `r (filter(p2_df, vending == "NO" & entry == 1) %>% distinct(station_name, line) %>% nrow() / filter(p2_df, vending == "NO") %>% distinct(station_name, line) %>% nrow()) %>% round(digits = 4) * 100`% station entrances/exits without vending allow entrance.
+* There are `r (filter(p2_df, vending == "NO" & entry == 1) %>% nrow() / filter(p2_df, vending == "NO") %>% nrow()) %>% round(digits = 4) * 100`% station entrances/exits without vending allow entrance.
  
 #### Route A specific stations
 
