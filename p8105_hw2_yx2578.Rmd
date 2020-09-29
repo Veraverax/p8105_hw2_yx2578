@@ -125,7 +125,7 @@ The raw dataset is not tidy as there are repeated information, and varialbles us
 
 * There are `r distinct(p2_df, station_name, line) %>% nrow()` distinct stations in this dataset.
 * There are `r filter(p2_df, ada == 'TRUE') %>% distinct(station_name, line) %>% nrow()` ADA compliant stations.
-* There are `r (filter(p2_df, vending == "NO" & entry == 0) %>% distinct(station_name, line) %>% nrow() / filter(p2_df, vending == "NO") %>% distinct(p2_df, station_name, line) %>% nrow()) %>% round(digits = 4) * 100`% station entrances/exits without vending allow entrance.
+* There are `r (filter(p2_df, vending == "NO" & entry == 1) %>% distinct(station_name, line) %>% nrow() / filter(p2_df, vending == "NO") %>% distinct(station_name, line) %>% nrow()) %>% round(digits = 4) * 100`% station entrances/exits without vending allow entrance.
  
 #### Route A specific stations
 
