@@ -90,10 +90,8 @@ Import the "NYC_Transit_Subway_Entrance_And_Exit_Data.csv" dataset in the code c
 
 ```{r import NYC Transit data, message = FALSE, warning = FALSE}
 p2_df = 
-  read_csv(
-    file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv"
-  ) %>%
-  janitor::clean_names() %>% 
+  read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
+  janitor::clean_names() %>%
   select (line, station_name, station_latitude, station_longitude, 
           route1:route11,  entrance_type, entry, vending, ada) %>%
   mutate(
@@ -125,14 +123,14 @@ The raw dataset is not tidy as there are repeated information, and varialbles us
 
 #### Answers to Problem 2 question list
 
-* There are `r nrow(distinct(p2_df, station_name, route_name))` distinct stations in this dataset.
-* There are `r nrow(filter(p2_df, ada == 'TRUE') %>% distinct(station_name, route_name))` ADA compliant stations.
-* There are `r nrow(distinct(p2_df, station_name, route_name)) - nrow(filter(p2_df, vending == "YES" & entry ==1)%>%distinct(station_name, route_name))` station entrances / exits without vending allow entrance, with a  corresponding percentage `r 100*round(1 - (nrow(filter(p2_df, vending == "YES" & entry ==1)%>%distinct(station_name, route_name)) / nrow(distinct(p2_df, station_name, route_name))), digits= 4)`%.
-
+* There are `r distinct(p2_df, station_name, line) %>% nrow()` distinct stations in this dataset.
+* There are `r filter(p2_df, ada == 'TRUE') %>% distinct(station_name, line) %>% nrow()` ADA compliant stations.
+* There are `r (filter(p2_df, vending == "NO" | entry == 0) %>% distinct(station_name, line) %>% nrow() / distinct(p2_df, station_name, line) %>% nrow()) %>% round(digits = 4) * 100`% station entrances/exits without vending allow entrance.
+ 
 #### Route A specific stations
 
 * The route number and route name are already distinct when tidying the imported data in the process above.
-* There are `r nrow(filter(p2_df, route_name == 'A') %>% distinct(station_name, route_name))` distinct stations serve the A train. Of these stations, `r nrow(filter(p2_df, route_name == 'A' & ada == 'TRUE') %>% distinct(station_name, route_name))` are ADA compliant.
+* There are `r filter(p2_df, route_name == 'A') %>% distinct(station_name, line) %>% nrow()` distinct stations serve the A train. Of these stations, `r filter(p2_df, route_name == 'A' & ada == 'TRUE') %>% distinct(station_name, line) %>% nrow()` are ADA compliant.
 
 
 ## Problem 3
@@ -220,23 +218,24 @@ p3_join_result = inner_join(p3_df1, p3_df2, by = c("year", "month")) %>%
 The “pols-month” dataset, after tidied, contains information related to the number of national politicians who are democratic or republican at given year and months:
 
 * There are `r ncol(p3_df1)` columns in total. Key variables are year, month and president's political position (variable name "president", coded as republican or democratic).
-* There are `r nrow(p3_df1)` records in total.
+* There are `r nrow(p3_df1)` rows in total.
 * The covered year range in this dataset is from `r min(p3_df1[,1])` to `r max(p3_df1[,1])`.
 
 The “snp” dataset, after tidied, contains information related to Standard & Poor’s stock market index at given year and months:
 
-* There are `r ncol(p3_df2)` columns in total. Variables are year, month and closing values of the S&P stock index
-* There are `r nrow(p3_df2)` records in total.
+* There are `r ncol(p3_df2)` columns in total. Variables are year, month and closing values of the S&P stock index.
+* There are `r nrow(p3_df2)` rows in total.
 * The covered year range in this dataset is from `r min(p3_df2[,1])` to `r max(p3_df2[,1])`.
 
 The “unemployment” dataset, after tidied, contains information related to Standard & Poor’s stock market index at given year and months:
 
-* There are `r ncol(p3_df3)` columns in total. Variables are year, month and percentage of unemployment
-* There are `r nrow(p3_df3)` records in total.
+* There are `r ncol(p3_df3)` columns in total. Variables are year, month and percentage of unemployment.
+* There are `r nrow(p3_df3)` rows in total.
 * The covered year range in this dataset is from `r min(p3_df3[,1])` to `r max(p3_df3[,1])`.
 
 #### Description of the merged dataset
 
-* The three dayasets are merged by year and month. The joined dataset has a dimention of (`r nrow(p3_join_result)` rows * `r ncol(p3_join_result)` columns). 
+* The three dayasets are merged by year and month using a inner join method. The joined dataset has a dimention of (`r nrow(p3_join_result)` rows * `r ncol(p3_join_result)` columns). 
 * The covered year range in the merged data is from `r min(p3_join_result[,1])` to `r max(p3_join_result[,1])`. 
-* The columns in the joined dataset are: `r ls(p3_join_result)`.
+* The columns in the joined dataset are: `r ls(p3_join_result, sorted = FALSE)`.
+* Key variables including year, month, president (democratic or republican), closing values of the S&P stock index, percentage of unemployment corresponding to that specific year and month.
