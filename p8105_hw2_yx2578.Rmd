@@ -90,25 +90,24 @@ Import the "NYC_Transit_Subway_Entrance_And_Exit_Data.csv" dataset in the code c
 
 ```{r import NYC Transit data, message = FALSE, warning = FALSE}
 p2_df = 
-  read_csv(file = "./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
+  read_csv("./data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>%
   janitor::clean_names() %>%
   select (line, station_name, station_latitude, station_longitude, 
           route1:route11,  entrance_type, entry, vending, ada) %>%
   mutate(
-    entry = recode(entry, "YES" = 1, "NO" = 0),
+    entry = ifelse(entry == "YES", TRUE, FALSE),
     route8 = as.character(route8),
     route9 = as.character(route9),
     route10 = as.character(route10),
     route11 = as.character(route11)
     ) %>%
-  distinct() %>%
   pivot_longer(
-    route1:route11,
+   route1:route11,
     values_to = "route_name"
-    ) %>%
-  drop_na(route_name) %>%
+   ) %>%
   select(-name)
 ```
+
 
 This dataset contains NYC Transit information. After cleaning and tidying, it contains the following variables: line, station name, station latitude, station longitude, routes served, entry, vending, entrance type, and ADA compliance status. 
 The steps I've used to clean the data so far are:
@@ -127,7 +126,7 @@ The raw dataset is not tidy as there are repeated information, and varialbles us
 
 * There are `r distinct(p2_df, station_name, line) %>% nrow()` distinct stations in this dataset.
 * There are `r filter(p2_df, ada == 'TRUE') %>% distinct(station_name, line) %>% nrow()` ADA compliant stations.
-* There are `r (filter(p2_df, vending == "NO" & entry == 1) %>% nrow() / filter(p2_df, vending == "NO") %>% nrow()) %>% round(digits = 4) * 100`% station entrances/exits without vending allow entrance.
+* There are `r (filter(p2_df, vending == "NO" & entry == TRUE) %>% nrow() / filter(p2_df, vending == "NO") %>% nrow()) %>% round(digits = 4) * 100`% station entrances/exits without vending allow entrance.
  
 #### Route A specific stations
 
